@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# This script is displaying "Best School" 10 times
+x=0
+while ((x <= 10));
+do
+	if [ $x -ne 9 ]
+	then
+		echo "Best School"
+	else
+		echo "Hi"
+	fi
+	x=$(( x + 1 ))
+done
