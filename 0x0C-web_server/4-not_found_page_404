@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#Install nginx
+apt-get update
+apt-get -y install nginx
+echo "Holberton School" > /var/www/html/index.nginx-debian.html
+sed -ie "s/^server {$/server {\n\trewrite ^\/redirect_me https:\/\/www.google.com\/ permanent;/g" /etc/nginx/sites-available/default
+echo "Ceci n'est pas une page" > /var/www/html/404_error.html
+sed -ie "s/^server {$/server {\n\terror_page 404 \/404_error.html;\n\tlocation = \/404_error.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}/g" /etc/nginx/sites-available/default
+service nginx restart
