@@ -1,9 +1,33 @@
 #!/usr/bin/env bash
-#Install nginx
+# Installs Nginx with the following configurations:
+#+    Listens on port 80.
+#+    Returns a page containing "Holberton School" when queried
+#+     at the root with a curl GET request.
+# Configures /redirect_me as a "301 Moved Permanently".
+# Includes a custom 404 page containing "Ceci n'est pas une page".
+
 apt-get update
-apt-get -y install nginx
-echo "Holberton School" > /var/www/html/index.nginx-debian.html
-sed -ie "s/^server {$/server {\n\trewrite ^\/redirect_me https:\/\/www.google.com\/ permanent;/g" /etc/nginx/sites-available/default
-echo "Ceci n'est pas une page" > /var/www/html/404_error.html
-sed -ie "s/^server {$/server {\n\terror_page 404 \/404_error.html;\n\tlocation = \/404_error.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}/g" /etc/nginx/sites-available/default
+apt-get install -y nginx
+
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Hello World!" > /etc/nginx/html/index.html
+touch /etc/nginx/html/404.html
+echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
+
+printf %s "server {
+    listen 80;
+    listen [::]:80 default_server;
+    root   /etc/nginx/html;
+    index  index.html index.htm;
+    location /redirect_me {
+        return 301 http://cuberule.com/;
+    }
+    error_page 404 /404.html;
+    location /404 {
+      root /etc/nginx/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
+
 service nginx restart
