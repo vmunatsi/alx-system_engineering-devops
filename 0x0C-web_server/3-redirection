@@ -1,7 +1,21 @@
 #!/usr/bin/env bash
-#Install nginx
+# Configures an Nginx server so that /redirect_me redirects to another page.
+# The redirection is configured as a "301 Moved Permanently"
+
 apt-get update
-apt-get -y install nginx
-echo "Holberton School" > /var/www/html/index.nginx-debian.html
-sed -ie "s/^server {$/server {\n\trewrite ^\/redirect_me https:\/\/www.google.com\/ permanent;/g" /etc/nginx/sites-available/default
+apt-get install -y nginx
+
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Hello World!" > /etc/nginx/html/index.html
+printf %s "server {
+    listen 80;
+    listen [::]:80 default_server;
+    root   /etc/nginx/html;
+    index  index.html index.htm;
+    location /redirect_me {
+        return 301 http://cuberule.com/;
+    }
+}" > /etc/nginx/sites-available/default
+
 service nginx restart
