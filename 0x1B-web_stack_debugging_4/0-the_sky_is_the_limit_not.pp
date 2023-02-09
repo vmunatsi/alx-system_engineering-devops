@@ -1,14 +1,8 @@
+# Change to allow more request
 
-f high amount of requests
-
-exec {'replace':
-  provider => shell,
-  command  => 'sudo sed -i "s/ULIMIT=\"-n 15\"/ULIMIT=\"-n 4096\"/" /etc/default/nginx',
-  before   => Exec['restart'],
+exec { 'fix--for-nginx':
+  command  => '/usr/bin/sudo /bin/sed -i "s/ULIMIT=\"\-n [0-9]*\"/ULIMIT=\"\-n 4096\"/g" /etc/default/nginx',
 }
-
-exec {'restart':
-  provider => shell,
-  command  => 'sudo service nginx restart',
+->exec { 'restart-nginx':
+  command  => '/usr/bin/sudo /etc/init.d/nginx restart',
 }
-
